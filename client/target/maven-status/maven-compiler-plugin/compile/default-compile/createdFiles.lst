@@ -1,0 +1,4 @@
+game\client\Client.class
+game\client\ClientApp.class
+game\client\ClientChannelInitializer.class
+game\client\ClientHandler.class
