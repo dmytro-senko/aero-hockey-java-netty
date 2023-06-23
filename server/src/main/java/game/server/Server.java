@@ -6,7 +6,7 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 
-public class Server implements Runnable {
+public class Server {
     private final int port;
     public Server(int port) {
         this.port = port;
