@@ -1,5 +1,8 @@
 package game;
 
+import game.model.Ball;
+import game.model.Rocket;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -252,5 +255,4 @@ public class Game {
     public void setRockets(List<Rocket> rockets) {
         this.rockets = rockets;
     }
-
 }

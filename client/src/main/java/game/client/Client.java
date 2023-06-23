@@ -46,13 +46,10 @@ public class Client {
                     f.channel().writeAndFlush(message);
                 }
             }
-
         } catch (Exception e) {
             throw new RuntimeException("Can't connect with server on port:" + port, e);
         } finally {
             group.shutdownGracefully();
         }
     }
-
-
 }
