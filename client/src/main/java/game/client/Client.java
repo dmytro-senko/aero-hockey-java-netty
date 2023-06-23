@@ -9,6 +9,8 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
+import static game.Constants.MESSAGE_FOR_EXIT;
+
 public class Client {
     private int port;
     private String host;
@@ -34,7 +36,7 @@ public class Client {
 
             while (true) {
                 String message = in.readLine();
-                if (message.equalsIgnoreCase("q")) {
+                if (message.equalsIgnoreCase(MESSAGE_FOR_EXIT)) {
                     break;
                 } else if (message.equalsIgnoreCase("a")) {
                     f.channel().writeAndFlush("LEFT");

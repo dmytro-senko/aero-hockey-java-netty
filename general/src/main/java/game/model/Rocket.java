@@ -1,5 +1,8 @@
 package game.model;
 
+import static game.Constants.FIRST_VALUE_Y_START_ROCKET;
+import static game.Constants.SECOND_VALUE_Y_START_ROCKET;
+
 public class Rocket {
     private String namePlayer;
     private int point;
@@ -14,8 +17,8 @@ public class Rocket {
     }
 
     public void initializeRocketPlayer() {
-        rocketOneY = 4;
-        rocketTwoY = 5;
+        rocketOneY = FIRST_VALUE_Y_START_ROCKET;
+        rocketTwoY = SECOND_VALUE_Y_START_ROCKET;
     }
 
     public int getRocketX() {

@@ -11,6 +11,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import static game.Constants.MAX_NUMBER_PLAYERS;
+import static game.Constants.MESSAGE_FOR_EXIT;
+
 public class ServerHandler extends SimpleChannelInboundHandler<String> {
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private static List<ChannelHandlerContext> clients = new ArrayList<>();
@@ -23,8 +26,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
     public void channelActive(ChannelHandlerContext ctx) {
         InetSocketAddress clientAddress = (InetSocketAddress) ctx.channel().remoteAddress();
         namePlayer = String.valueOf(clientAddress.getPort());
-// если удаляется 1-й игрок, тогда при подключении нового второй перезаписівается а
-        if (clients.size() < 2) {
+        if (clients.size() < MAX_NUMBER_PLAYERS) {
             if (clients.size() == 0) {
                 game = new Game();
                 game.getRockets().get(0).setNamePlayer(namePlayer);
@@ -37,20 +39,17 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
             lookers.add(ctx);
             message = "[Server]: " + "Игрок " + namePlayer + " вошел в комнату как наблюдатель" ;
         }
-
-        //broadcastMessage(message);
         System.out.println(message);
-
         sendMessageEverySecond();
     }
 
     @Override
     public void channelRead0(ChannelHandlerContext ctx, String msg) {
-        if (msg.equalsIgnoreCase("q")) {
+        if (msg.equalsIgnoreCase(MESSAGE_FOR_EXIT)) {
             channelInactive(ctx);
         } else {
             //Изменение игрового поля и отправка его всем клиентам
-            game.updateRockets(ctx, msg, clients);
+            game.updateRockets(namePlayer, msg);
         }
     }
 
@@ -64,7 +63,6 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
         if (lookers.contains(ctx)) {
             message = "[Server]: " + "Наблюдатель " + namePlayer + " вышел из комнаты!";
             lookers.remove(ctx);
-
         } else {
             message = "[Server]: " + "Player " + namePlayer + " вышел из комнаты!";
             clients.remove(ctx);
@@ -72,7 +70,6 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
             game.getRocketByPlayerName(namePlayer).setNamePlayer(null);
             game.updateGameAfterExitPlayer();
         }
-        //broadcastMessage(message);
         System.out.println(message);
         ctx.close();
     }
@@ -81,28 +78,17 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
         List<ChannelHandlerContext> listClients = new ArrayList<>();
         listClients.addAll(clients);
         listClients.addAll(lookers);
-
         for (ChannelHandlerContext context : listClients) {
             context.writeAndFlush(message);
-
         }
     }
 
+    // Отправка сообщений каждую секунду всем подключенным клиентам
     private void sendMessageEverySecond() {
-        if (clients.size() == 2) {
-            // Отправка сообщений каждую секунду
+        if (clients.size() == MAX_NUMBER_PLAYERS) {
             scheduler.scheduleAtFixedRate(() -> {
-                // логика движения шайбі ballX:ballY
-                if (clients.size() == 2) {
-                    StringBuilder sb = new StringBuilder();
-                    sb.append("Update:")
-                            .append(game.getGameScoreOnePlayer())
-                            .append(game.updateRockets())
-                            .append(game.updateMovedBallString())
-                            .append(game.getGameScoreTwoPlayer());
-
-                    message = sb.toString();
-                    // Отправка сообщения всем подключенным клиентам
+                if (clients.size() == MAX_NUMBER_PLAYERS) {
+                    message = game.getMessageForClients();
                     broadcastMessage(message);
                 } else {
                     scheduler.shutdown();

@@ -1,5 +1,9 @@
 package game.model;
 
+import static game.Constants.SPED_BALL_DEFAULT;
+import static game.Constants.START_BALL_NEAR_PLAYER_ONE_X;
+import static game.Constants.START_BALL_NEAR_PLAYER_ONE_Y;
+
 public class Ball {
     private int ballX;
     private int ballY;
@@ -7,10 +11,10 @@ public class Ball {
     private int spedBallY;
 
     public Ball() {
-        this.ballX = 2;
-        this.ballY = 4;
-        this.spedBallX = 1;
-        this.spedBallY = 1;
+        this.ballX = START_BALL_NEAR_PLAYER_ONE_X;
+        this.ballY = START_BALL_NEAR_PLAYER_ONE_Y;
+        this.spedBallX = SPED_BALL_DEFAULT;
+        this.spedBallY = SPED_BALL_DEFAULT;
     }
 
     public int getBallX() {
