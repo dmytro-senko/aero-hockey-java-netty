@@ -12,7 +12,6 @@ public class Rocket {
 
     public Rocket(int rocketX) {
         this.rocketX = rocketX;
-        this.point = 0;
         initializeRocketPlayer();
     }
 
