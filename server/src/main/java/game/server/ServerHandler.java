@@ -11,8 +11,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import static game.Constants.EXIT_COMMAND;
 import static game.Constants.MAX_NUMBER_PLAYERS;
-import static game.Constants.MESSAGE_FOR_EXIT;
 
 public class ServerHandler extends SimpleChannelInboundHandler<String> {
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
@@ -29,7 +29,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
         if (clients.size() < MAX_NUMBER_PLAYERS) {
             if (clients.size() == 0) {
                 game = new Game();
-                game.getRockets().get(0).setNamePlayer(namePlayer);
+                game.getFirstRocket().setNamePlayer(namePlayer);
             } else {
                 game.getRocketByPlayerNameIsNull().setNamePlayer(namePlayer);
             }
@@ -45,7 +45,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
 
     @Override
     public void channelRead0(ChannelHandlerContext ctx, String msg) {
-        if (msg.equalsIgnoreCase(MESSAGE_FOR_EXIT)) {
+        if (msg.equalsIgnoreCase(EXIT_COMMAND)) {
             channelInactive(ctx);
         } else {
             //Изменение игрового поля и отправка его всем клиентам

@@ -1,11 +1,11 @@
 package game.client;
 
+import static game.Constants.DEFAULT_PORT;
 import static game.Constants.HOST;
-import static game.Constants.PORT;
 
 public class ClientApp {
     public static void main(String[] args) {
-        Client client = new Client(HOST, PORT);
+        Client client = new Client(HOST, DEFAULT_PORT);
         client.run();
     }
 }

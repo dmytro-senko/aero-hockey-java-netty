@@ -9,7 +9,7 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
-import static game.Constants.MESSAGE_FOR_EXIT;
+import static game.Constants.EXIT_COMMAND;
 
 public class Client {
     private int port;
@@ -30,22 +30,12 @@ public class Client {
                     .handler(new ClientChannelInitializer());
 
             ChannelFuture f = b.connect(host, port).sync();
-            System.out.println("[Server]: Вы подключились к серверу " + port + ". Для выхода отправить: 'q'");
+            System.out.println("[Server]: Вы подключились к серверу " + port + ". Для выхода отправить: " + EXIT_COMMAND);
 
             BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 
-            while (true) {
-                String message = in.readLine();
-                if (message.equalsIgnoreCase(MESSAGE_FOR_EXIT)) {
-                    break;
-                } else if (message.equalsIgnoreCase("a")) {
-                    f.channel().writeAndFlush("LEFT");
-                } else if (message.equalsIgnoreCase("d")) {
-                    f.channel().writeAndFlush("RIGHT");
-                } else {
-                    f.channel().writeAndFlush(message);
-                }
-            }
+            ClientMessageSender clientMessageSender = new ClientMessageSender(f.channel());
+            clientMessageSender.sendInputToServer();
         } catch (Exception e) {
             throw new RuntimeException("Can't connect with server on port:" + port, e);
         } finally {

@@ -1,6 +1,7 @@
 game\Game.class
-game\coder\MyStringDecoder.class
 game\coder\MyStringEncoder.class
+game\model\Rocket.class
+game\coder\MyStringDecoder.class
+game\service\GameUpdater.class
 game\Constants.class
 game\model\Ball.class
-game\model\Rocket.class
